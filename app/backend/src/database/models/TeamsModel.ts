@@ -2,7 +2,7 @@ import { DataTypes, Model } from 'sequelize';
 import db from '.';
 
 class Teams extends Model {
-  declare id: number;
+  declare readonly id: number;
   declare teamName: string;
 }
 
@@ -16,12 +16,16 @@ Teams.init({
   teamName: {
     allowNull: false,
     type: DataTypes.STRING,
+    field: 'team_name',
   },
 }, {
   underscored: true,
   sequelize: db,
-  tableName: 'teams',
+  modelName: 'teams',
   timestamps: false,
 });
+
+// Teams.hasMany(Matches, { foreignKey: 'team_name', as: 'team_name' });
+// Matches.belongsTo(Teams, { foreignKey: 'team_name', as: 'team_name' });
 
 export default Teams;
