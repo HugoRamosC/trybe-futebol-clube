@@ -11,4 +11,9 @@ export default class TeamsController {
     const response = await this._teamsService.getAll();
     res.status(200).json(response);
   }
+
+  async getById(req: Request, res: Response) {
+    const response = await this._teamsService.getById(+req.params.id);
+    res.status(200).json(response);
+  }
 }
