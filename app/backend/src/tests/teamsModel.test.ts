@@ -8,6 +8,7 @@ import TeamsModel from '../database/models/TeamsModel';
 import teamsMock from '../../../../__tests__/expected_results/teams';
 
 import { Response } from 'superagent';
+import ITeams from '../interfaces/ITeams';
 
 chai.use(chaiHttp);
 
@@ -18,7 +19,7 @@ describe('Teams Model', function () {
 
   describe('List all teams', function () {
     it('Should return all teams', async () => {
-      sinon.stub(TeamsModel, 'getAll').resolves(teamsMock);
+      sinon.stub(TeamsModel, 'findAll').resolves(teamsMock as []);
       const response = await chai.request(app).get('/teams');
 
       expect(response.status).to.be.equal(200);
