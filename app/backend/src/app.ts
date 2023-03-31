@@ -1,7 +1,7 @@
 import * as express from 'express';
-import errorMiddleware from './middlewares/errorMiddleware';
-import teamsRouters from './routes/teams.routes';
-import loginRouters from './routes/login.routes';
+import errorMiddleware from './api/middlewares/errorMiddleware';
+import teamsRouters from './api/routes/teams.routes';
+import loginRouters from './api/routes/login.routes';
 
 class App {
   public app: express.Express;
