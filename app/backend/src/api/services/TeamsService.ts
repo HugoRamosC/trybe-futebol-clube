@@ -1,6 +1,6 @@
 import { ModelStatic } from 'sequelize';
 import IServiceTeams from '../interfaces/IServiceTeams';
-import TeamsModel from '../database/models/TeamsModel';
+import TeamsModel from '../../database/models/TeamsModel';
 import ITeams from '../interfaces/ITeams';
 
 export default class TeamsService implements IServiceTeams {
