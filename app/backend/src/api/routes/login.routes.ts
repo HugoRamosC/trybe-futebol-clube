@@ -1,11 +1,13 @@
 import { Router } from 'express';
 import LoginService from '../services/loginService';
 import LoginController from '../controllers/LoginController';
-import verifyRequeridFields from '../middlewares/verifyRequiredFields';
+import verifyRequeridFields from '../middlewares/verifyRequiredFieldsMiddleware';
+import InputsLoginValidations from '../../utils/userValidation';
 
 const loginRouters = Router();
 
-const loginService = new LoginService();
+const loginValidation = new InputsLoginValidations();
+const loginService = new LoginService(loginValidation);
 const loginController = new LoginController(loginService);
 
 loginRouters.post(
