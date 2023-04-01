@@ -1,5 +1,6 @@
 import * as jwt from 'jsonwebtoken';
-import IUserToken from '../api/interfaces/IUserToken';
+import IUserToken, { IJwtToken } from '../api/interfaces/IUserToken';
+import TokenErrors from '../api/Errors/tokenErrors';
 
 export default class AuthenticatorJWT {
   private _secret: string;
@@ -19,8 +20,11 @@ export default class AuthenticatorJWT {
     return token;
   }
 
-  public validateToken(token: string) {
-    const decodedJwt = jwt.verify(token, this._secret);
-    return { decodedJwt };
+  public validateToken(token: string): IJwtToken {
+    try {
+      return jwt.verify(token, this._secret) as IJwtToken;
+    } catch (error) {
+      throw new TokenErrors('Token must be a valid token');
+    }
   }
 }
