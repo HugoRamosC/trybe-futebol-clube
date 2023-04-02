@@ -9,6 +9,7 @@ export default class MatchesController {
 
   async getAll(_req: Request, res: Response) {
     const response = await this._matchesService.getAll();
+    // console.log('>>>>>', response);
     res.status(200).json(response);
   }
 }
