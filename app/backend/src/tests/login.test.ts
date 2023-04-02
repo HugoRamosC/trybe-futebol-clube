@@ -66,4 +66,32 @@ describe('Login/Users tests', function () {
       expect(httpResponse.body).to.deep.equal({ message: 'Invalid email or password' })
     })
   })
+
+  describe('Invalid token', () => {
+    it('Should return status 401 if token not found', async () => {
+      const httpResponse = await chai
+        .request(app)
+        .get('/login/role')
+        .send({})
+      expect(httpResponse.status).to.equal(401)
+      expect(httpResponse.body).to.deep.equal({ message: 'Token not found' })
+    })
+    it('Should return status 401 if informed a invalid token', async () => {
+      const token = await chai
+        .request(app)
+        .post('/login')
+        .send({
+          "email": "admin@admin.com",
+          "password": "secret_admin",
+        })
+      expect(token).to.not.be.null;
+      
+      const httpResponse = await chai
+        .request(app)
+        .get('/login/role')
+        .set('Authorization', `${token}`);
+      expect(httpResponse.status).to.equal(401)
+      expect(httpResponse.body).to.deep.equal({ message: 'Token must be a valid token' })
+    })
+  })
 });
