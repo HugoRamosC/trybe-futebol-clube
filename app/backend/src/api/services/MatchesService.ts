@@ -1,6 +1,7 @@
 import { ModelStatic } from 'sequelize';
 import IMatches from '../interfaces/IMatches';
 import IMatchGoals from '../interfaces/IMatchGoals';
+import INewMatch from '../interfaces/INewMatch';
 import MatchesModel from '../../database/models/MatchesModel';
 import TeamsService from './TeamsService';
 import Teams from '../../database/models/TeamsModel';
@@ -51,5 +52,12 @@ export default class MatchesService {
       { where: { id } },
     );
     return { message: 'GOOOOOOLLLL!!!!' };
+  }
+
+  async newMatch({ homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals }: INewMatch) {
+    const newMatch = await this._model.create(
+      { homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals, inProgress: true },
+    );
+    return newMatch;
   }
 }

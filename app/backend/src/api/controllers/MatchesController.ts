@@ -33,4 +33,10 @@ export default class MatchesController {
     const response = await this._matchesService.updateInProgressMatch(requestObj);
     return res.status(200).json(response);
   }
+
+  async newMatch(req: Request, res: Response) {
+    // const requestObj = { ...req.params, ...req.body };
+    const response = await this._matchesService.newMatch(req.body);
+    return res.status(201).json(response);
+  }
 }

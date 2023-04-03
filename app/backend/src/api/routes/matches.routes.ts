@@ -19,5 +19,10 @@ matchesRouter.patch(
   verifyToken(),
   matchesController.updateInProgressMatch.bind(matchesController),
 );
+matchesRouter.post(
+  '/matches',
+  verifyToken(),
+  matchesController.newMatch.bind(matchesController),
+);
 
 export default matchesRouter;
