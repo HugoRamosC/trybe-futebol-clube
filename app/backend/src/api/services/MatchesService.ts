@@ -5,6 +5,8 @@ import INewMatch from '../interfaces/INewMatch';
 import MatchesModel from '../../database/models/MatchesModel';
 import TeamsService from './TeamsService';
 import Teams from '../../database/models/TeamsModel';
+import ConflictTeamsError from '../Errors/conflictTeamsError';
+import NotFoundTeamError from '../Errors/notFoundTeamError';
 
 export default class MatchesService {
   private _model: ModelStatic<MatchesModel> = MatchesModel;
@@ -55,6 +57,10 @@ export default class MatchesService {
   }
 
   async newMatch({ homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals }: INewMatch) {
+    if (homeTeamId === awayTeamId) throw new ConflictTeamsError();
+    const isHomeTeam = await this._model.findByPk(homeTeamId);
+    const isAwayTeam = await this._model.findByPk(awayTeamId);
+    if (!isHomeTeam || !isAwayTeam) throw new NotFoundTeamError();
     const newMatch = await this._model.create(
       { homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals, inProgress: true },
     );
