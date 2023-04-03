@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import LoginService from '../services/loginService';
 import LoginController from '../controllers/LoginController';
-import verifyRequeridFields from '../middlewares/verifyRequiredFieldsMiddleware';
 import InputsLoginValidations from '../../utils/userValidation';
+import verifyRequeridFields from '../middlewares/verifyRequiredFieldsMiddleware';
 import verifyToken from '../middlewares/verifyTokenMiddleware';
 
 const loginRouters = Router();
@@ -19,6 +19,7 @@ loginRouters.post(
 loginRouters.get(
   '/login/role',
   verifyToken(),
+  loginController.getRole.bind(loginController),
 );
 
 export default loginRouters;

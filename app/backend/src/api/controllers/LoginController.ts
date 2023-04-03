@@ -15,4 +15,10 @@ export default class LoginController {
       next(error);
     }
   }
+
+  async getRole(req: Request, res: Response) {
+    this.getRole = this.getRole.bind(this);
+    const { role } = req.body;
+    if (role) res.status(200).json({ role });
+  }
 }
