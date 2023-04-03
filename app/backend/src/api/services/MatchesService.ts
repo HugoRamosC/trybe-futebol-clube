@@ -1,5 +1,4 @@
 import { ModelStatic } from 'sequelize';
-// import { ParseOptions } from 'querystring';
 import MatchesModel from '../../database/models/MatchesModel';
 import IMatches from '../interfaces/IMatches';
 import TeamsService from './TeamsService';
@@ -39,7 +38,7 @@ export default class MatchesService {
 
   async finishMatch(id: number) {
     await this._model.update(
-      { values: { inProgress: false } },
+      { inProgress: false },
       { where: { id } },
     );
     return { message: 'Finished' };

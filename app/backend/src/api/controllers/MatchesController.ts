@@ -17,14 +17,14 @@ export default class MatchesController {
     return res.status(200).json(response);
   }
 
-  async finishMatch(req: Request, res: Response) {
-    const response = await this._matchesService.finishMatch(+req.params.id);
-    return res.status(200).json(response);
-  }
-
   // async getInProgressOrFinished(req: Request, res: Response) {
   //   console.log('constroller>>>>>>>>', req.query);
   //   const response = await this._matchesService.getInProgressOrFineshed(req.query);
   //   res.status(200).json(response);
   // }
+
+  async finishMatch(req: Request, res: Response) {
+    const response = await this._matchesService.finishMatch(+req.params.id);
+    return res.status(200).json(response);
+  }
 }
