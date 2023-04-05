@@ -77,7 +77,7 @@ describe('Login/Users tests', function () {
       expect(httpResponse.body).to.deep.equal({ message: 'Token not found' })
     })
     it('Should return status 401 if informed a invalid token', async () => {
-      const token = await chai
+      const token = await chai// response
         .request(app)
         .post('/login')
         .send({
