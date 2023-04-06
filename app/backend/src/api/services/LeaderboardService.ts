@@ -4,7 +4,7 @@ import MatchesModel from '../../database/models/MatchesModel';
 import ICountGames from '../interfaces/ICountGames';
 import ICountGoals from '../interfaces/ICountGoals';
 import IRateTeam from '../interfaces/IRateTeam';
-import { ITeamStatics, ITeamStaticsWithoutRate } from '../interfaces/ITeamStatics';
+import ITeamStatics from '../interfaces/ITeamStatics';
 
 export default class LeaderboardService {
   private _teamModel: ModelStatic<TeamsModel> = TeamsModel;
@@ -100,18 +100,36 @@ export default class LeaderboardService {
     };
   }
 
-  async getHomeMatchesStatics() {
+  sortMatches(matchesArr: ITeamStatics[]) {
+    this.sortMatches = this.sortMatches.bind(this);
+    return matchesArr.sort((teamA, teamB) => {
+      if (teamB.totalPoints === teamA.totalPoints) {
+        if (teamB.totalVictories === teamA.totalVictories) {
+          if (teamB.goalsBalance === teamA.goalsBalance) {
+            // if (teamB.goalsFavor === teamA.goalsFavor) {}
+            return teamB.goalsFavor - teamA.goalsFavor;
+          }
+          return teamB.goalsBalance - teamA.goalsBalance;
+        }
+        return teamB.totalVictories - teamA.totalVictories;
+      }
+      return teamB.totalPoints - teamA.totalPoints;
+    });
+  }
+
+  async getHomeMatchesStatics(): Promise<ITeamStatics[]> {
     const allMatches = await this._matchesModel.findAll();
     const allTeams = await this._teamModel.findAll();
-    const matchesStatics = await Promise.all(allTeams.map(async (team) => {
+    const matchesStatics: ITeamStatics[] = await Promise.all(allTeams.map(async (team) => {
       const homeMatchesFinished: MatchesModel[] = allMatches
         .filter((match) => match.homeTeamId === team.id && match.inProgress === false);
-      const obj: ITeamStaticsWithoutRate = await this
+      const obj: ITeamStatics = await this
         .teamStatics(team.id, homeMatchesFinished);
-      delete obj.goalsBalance;
-      delete obj.efficiency;
+      // delete obj.goalsBalance;
+      // delete obj.efficiency;
       return obj;
     }));
-    return matchesStatics;
+    const sortedMatchesStatics = this.sortMatches(matchesStatics);
+    return sortedMatchesStatics;
   }
 }
