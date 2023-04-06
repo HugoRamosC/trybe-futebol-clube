@@ -104,10 +104,10 @@ export default class LeaderboardService {
     const allMatches = await this._matchesModel.findAll();
     const allTeams = await this._teamModel.findAll();
     const matchesStatics = await Promise.all(allTeams.map(async (team) => {
-      const homeMatchesFinished = allMatches
+      const homeMatchesFinished: MatchesModel[] = allMatches
         .filter((match) => match.homeTeamId === team.id && match.inProgress === false);
       const obj: ITeamStaticsWithoutRate = await this
-        .teamStatics(team.id, homeMatchesFinished as any);
+        .teamStatics(team.id, homeMatchesFinished);
       delete obj.goalsBalance;
       delete obj.efficiency;
       return obj;
