@@ -7,7 +7,7 @@ class Matches extends Model {
   declare homeTeamId: number;
   declare homeTeamGoals: number;
   declare awayTeamId: number;
-  declare awaitTeamGoals: number;
+  declare awayTeamGoals: number;
   declare inProgress: boolean;
 }
 

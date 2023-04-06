@@ -3,6 +3,6 @@ export default interface IMatches {
   homeTeamId: number;
   homeTeamGoals: number;
   awayTeamId: number;
-  awaitTeamGoals: number;
+  awayTeamGoals: number;
   inProgress: boolean;
 }
