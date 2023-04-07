@@ -94,7 +94,7 @@ export default class LeaderboardService {
       goalsFavor: goals.goalsFavor,
       goalsOwn: goals.goalsOwn,
       goalsBalance: goals.goalsBalance,
-      efficiency: +rate.efficiency.toFixed(2) as number,
+      efficiency: +rate.efficiency.toFixed(2),
     };
   }
 
