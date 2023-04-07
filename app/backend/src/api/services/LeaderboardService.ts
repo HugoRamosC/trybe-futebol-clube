@@ -18,14 +18,12 @@ export default class LeaderboardService {
   async getHomeGames(teamId: number, arrMatches: MatchesModel[]) {
     this.getHomeGames = this.getHomeGames.bind(this);
     const homeGames = arrMatches.filter((match) => match.homeTeamId === teamId);
-    // .findAll({ where: { homeTeamId: teamId } }) as unknown as IMatches[];
     return homeGames;
   }
 
   async getAwayGames(teamId: number, arrMatches: MatchesModel[]) {
     this.getAwayGames = this.getAwayGames.bind(this);
     const awayGames = arrMatches.filter((match) => match.awayTeamId === teamId);
-    // .findAll({ where: { awayTeamId: teamId } }) as unknown as IMatches[];
     return awayGames;
   }
 
@@ -106,7 +104,6 @@ export default class LeaderboardService {
       if (teamB.totalPoints === teamA.totalPoints) {
         if (teamB.totalVictories === teamA.totalVictories) {
           if (teamB.goalsBalance === teamA.goalsBalance) {
-            // if (teamB.goalsFavor === teamA.goalsFavor) {}
             return teamB.goalsFavor - teamA.goalsFavor;
           }
           return teamB.goalsBalance - teamA.goalsBalance;
@@ -117,16 +114,18 @@ export default class LeaderboardService {
     });
   }
 
-  async getHomeMatchesStatics(): Promise<ITeamStatics[]> {
+  async getHomeMatchesStatics({ path }: { path: string }): Promise<ITeamStatics[]> {
     const allMatches = await this._matchesModel.findAll();
     const allTeams = await this._teamModel.findAll();
     const matchesStatics: ITeamStatics[] = await Promise.all(allTeams.map(async (team) => {
       const homeMatchesFinished: MatchesModel[] = allMatches
-        .filter((match) => match.homeTeamId === team.id && match.inProgress === false);
+        .filter((match) => (
+          (path.includes('home')
+            ? match.homeTeamId === team.id
+            : match.awayTeamId === team.id)
+          && match.inProgress === false));
       const obj: ITeamStatics = await this
         .teamStatics(team.id, homeMatchesFinished);
-      // delete obj.goalsBalance;
-      // delete obj.efficiency;
       return obj;
     }));
     const sortedMatchesStatics = this.sortMatches(matchesStatics);

@@ -7,8 +7,9 @@ export default class LeaderboardController {
     this._leaderboardService = service;
   }
 
-  async getHomeMatchesStatics(_req: Request, res: Response) {
-    const response = await this._leaderboardService.getHomeMatchesStatics();
+  async getHomeMatchesStatics(req: Request, res: Response) {
+    const response = await this._leaderboardService
+      .getHomeMatchesStatics(req);
     return res.status(200).json(response);
   }
 }

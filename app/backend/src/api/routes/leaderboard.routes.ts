@@ -13,5 +13,10 @@ leaderboardRouter.get(
   // verifyToken(),
   leaderboardController.getHomeMatchesStatics.bind(leaderboardController),
 );
+leaderboardRouter.get(
+  '/leaderboard/away',
+  // verifyToken(),
+  leaderboardController.getHomeMatchesStatics.bind(leaderboardController),
+);
 
 export default leaderboardRouter;
