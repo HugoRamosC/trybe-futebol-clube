@@ -12,4 +12,9 @@ export default class LeaderboardController {
       .getHomeMatchesStatics(req);
     return res.status(200).json(response);
   }
+
+  async getLeaderboard(req: Request, res: Response) {
+    const response = await this._leaderboardService.getLeaderboard();
+    return res.status(200).json(response);
+  }
 }

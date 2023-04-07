@@ -118,14 +118,28 @@ export default class LeaderboardService {
     const allMatches = await this._matchesModel.findAll();
     const allTeams = await this._teamModel.findAll();
     const matchesStatics: ITeamStatics[] = await Promise.all(allTeams.map(async (team) => {
-      const homeMatchesFinished: MatchesModel[] = allMatches
+      const matchesFinished: MatchesModel[] = allMatches
         .filter((match) => (
           (path.includes('home')
             ? match.homeTeamId === team.id
             : match.awayTeamId === team.id)
           && match.inProgress === false));
       const obj: ITeamStatics = await this
-        .teamStatics(team.id, homeMatchesFinished);
+        .teamStatics(team.id, matchesFinished);
+      return obj;
+    }));
+    const sortedMatchesStatics = this.sortMatches(matchesStatics);
+    return sortedMatchesStatics;
+  }
+
+  async getLeaderboard() {
+    const allMatches = await this._matchesModel.findAll();
+    const allTeams = await this._teamModel.findAll();
+    const matchesStatics: ITeamStatics[] = await Promise.all(allTeams.map(async (team) => {
+      const matchesFinished: MatchesModel[] = allMatches
+        .filter((match) => match.inProgress === false);
+      const obj: ITeamStatics = await this
+        .teamStatics(team.id, matchesFinished);
       return obj;
     }));
     const sortedMatchesStatics = this.sortMatches(matchesStatics);
