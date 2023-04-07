@@ -17,12 +17,6 @@ export default class MatchesController {
     return res.status(200).json(response);
   }
 
-  // async getInProgressOrFinished(req: Request, res: Response) {
-  //   console.log('constroller>>>>>>>>', req.query);
-  //   const response = await this._matchesService.getInProgressOrFineshed(req.query);
-  //   res.status(200).json(response);
-  // }
-
   async finishMatch(req: Request, res: Response) {
     const response = await this._matchesService.finishMatch(+req.params.id);
     return res.status(200).json(response);
@@ -36,7 +30,6 @@ export default class MatchesController {
 
   async newMatch(req: Request, res: Response, next: NextFunction) {
     try {
-      // const requestObj = { ...req.params, ...req.body };
       const response = await this._matchesService.newMatch(req.body);
       return res.status(201).json(response);
     } catch (error) {

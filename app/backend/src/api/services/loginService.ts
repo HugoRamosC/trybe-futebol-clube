@@ -7,18 +7,18 @@ import UnauthorizedError from '../Errors/unauthorizedError';
 import InputsLoginValidations from '../../utils/userValidation';
 
 export default class loginService {
-  private _model: ModelStatic<UsersModel>;
+  private _userModel: ModelStatic<UsersModel>;
   private _inputsValidations: InputsLoginValidations;
 
   constructor(inputsValidations: InputsLoginValidations) {
-    this._model = UsersModel;
+    this._userModel = UsersModel;
     this._inputsValidations = inputsValidations;
   }
 
   async login({ email, password }: IUserLogin): Promise<string | null> {
     this._inputsValidations.validateInputsUserLogin({ email, password });
 
-    const user = await this._model.findOne({ where: { email } });
+    const user = await this._userModel.findOne({ where: { email } });
     if (!user) throw new UnauthorizedError();
 
     const authorizedAccess = bcrypt.compareSync(password, user?.password);

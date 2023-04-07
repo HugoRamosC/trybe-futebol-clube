@@ -9,6 +9,9 @@ import { finishedMatchesMock, inProgressMatchesMock, matchesMock } from './expec
 
 import verifyToken from '../api/middlewares/verifyTokenMiddleware';
 import { Request, Response, NextFunction } from 'express';
+import Users from '../database/models/UsersModel';
+import verifyRequeridFields from '../api/middlewares/verifyRequiredFieldsMiddleware';
+import * as jwt from 'jsonwebtoken';
 
 
 chai.use(chaiHttp);
@@ -29,9 +32,6 @@ describe('Matches tests', function () {
     });
 
     it('Should return in progress matches', async () => {
-      // const filtredInProgressMock = matchesMock
-      //   .filter((match) => match.inProgress === true)
-
       sinon.stub(MatchesModel, 'findAll').resolves(
         inProgressMatchesMock as unknown as MatchesModel[]);
 
@@ -60,60 +60,47 @@ describe('Matches tests', function () {
 
   describe('Update matches', function () {
     it('Should return match updated to finish', async () => {
-      sinon.stub(MatchesModel, 'create').resolves({
-        "id": 1,
-        "homeTeamId": 16,
-        "homeTeamGoals": 5,
-        "awayTeamId": 8,
-        "awayTeamGoals": 6,
-        "inProgress": true,
-      } as any)
-      //  returns(
-      //   (_req: Request, _res: Response, next: NextFunction) => {
-      //   next()
-      // });
-      // const middlewaresStub = {
-      //   getUserAuthenticated: 
-      //   sinon.stub().callsFake((var1, var2, var3) => {
-      //     return async (req: Request, res: Response, next: NextFunction) => {
-      //       next();
-      //     };
-      //   });
-      // };
-
-      const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjgwNTQxODY3LCJleHAiOjE2ODMxMzM4Njd9.9mxXH-G5R6PMJ6HIi48iNX-1ZFdO505r5OWvXpJUToU'
-      // await chai
-      //   .request(app)
-      //   .post('/login')
-      //   .send({
-      //     "email": "admin@admin.com",
-      //     "password": "secret_admin",
-      //   })
-      //   .set('Authorization', token);
-      // expect(token).to.not.be.null;
-
       const response = await chai
+      .request(app)
+      .post('/login')
+      .send({
+        email: 'admin@admin.com',
+        password: 'secret_admin',
+      });
+
+      const httpResponse = await chai
         .request(app)
         .patch('/matches/41/finish')
-        .set('Authorization', token);
+      .set('Authorization', response.body.token);
 
-      expect(response.status).to.be.equal(200);
-      expect(response.body).to.deep.equal({ message: 'Finished' });
+      expect(httpResponse.status).to.be.equal(200);
+      expect(httpResponse.body).to.deep.equal({ message: 'Finished' });
     });
   });
 
   describe('Create new matche', function () {
     it('Should return status 422 if try create new match with same team', async () => {
+      // sinon.stub(jwt, 'sign').resolves('tokenMock')
+
       const response = await chai
+        .request(app)
+        .post('/login')
+        .send({
+          email: 'admin@admin.com',
+          password: 'secret_admin',
+        });
+
+      const httpResponse = await chai
         .request(app)
         .post('/matches')
         .send({
           homeTeamId: 1,
           awayTeamId: 1,
         })
+        .set('Authorization', response.body.token);
 
-      expect(response.status).to.be.equal(422);
-      expect(response.body).to.deep.equal({ message: 'It is not possible to create a match with two equal teams' });
+      expect(httpResponse.status).to.be.equal(422);
+      expect(httpResponse.body).to.deep.equal({ message: 'It is not possible to create a match with two equal teams' });
     });
   });
 });

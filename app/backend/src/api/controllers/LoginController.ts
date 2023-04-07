@@ -19,6 +19,7 @@ export default class LoginController {
   async getRole(req: Request, res: Response) {
     this.getRole = this.getRole.bind(this);
     const { role } = req.body;
-    if (role) res.status(200).json({ role });
+    if (!role) res.status(404).json({ message: 'Token not found' });
+    res.status(200).json({ role });
   }
 }

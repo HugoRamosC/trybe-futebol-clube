@@ -59,7 +59,7 @@ describe('Login/Users tests', function () {
         .request(app)
         .post('/login')
         .send({
-          email: 'invalid@Email.com',
+          email: 'valid@Email.com',
           password: 'small'
         })
       expect(httpResponse.status).to.equal(401)
@@ -68,30 +68,43 @@ describe('Login/Users tests', function () {
   })
 
   describe('Invalid token', () => {
-    it('Should return status 401 if token not found', async () => {
+    it('Should return status 404 if token not found', async () => {
+      const httpResponse = await chai
+        .request(app)
+        .get('/login')
+        .send({})
+      expect(httpResponse.status).to.equal(404)
+      // expect(httpResponse.body).to.deep.equal({ message: 'Token not found' })
+    })
+
+    it('Should return status 401 if informed a invalid token', async () => {
       const httpResponse = await chai
         .request(app)
         .get('/login/role')
-        .send({})
+        .set('Authorization', 'invalidToken');
       expect(httpResponse.status).to.equal(401)
-      expect(httpResponse.body).to.deep.equal({ message: 'Token not found' })
+      expect(httpResponse.body).to.deep.equal({ message: 'Token must be a valid token' })
     })
-    it('Should return status 401 if informed a invalid token', async () => {
-      const token = await chai// response
+  })
+
+  describe('Login get role', () => {
+    it('Should return status 200 and a role user', async () => {
+      const response = await chai
         .request(app)
         .post('/login')
         .send({
           "email": "admin@admin.com",
           "password": "secret_admin",
         })
-      expect(token).to.not.be.null;
-      
+      expect(response).to.not.be.null;
+
       const httpResponse = await chai
         .request(app)
         .get('/login/role')
-        .set('Authorization', `${token}`);
-      expect(httpResponse.status).to.equal(401)
-      expect(httpResponse.body).to.deep.equal({ message: 'Token must be a valid token' })
+        .set('Authorization', response.body.token)
+
+      expect(httpResponse.status).to.equal(200)
+      expect(httpResponse.body).to.deep.equal({ role: 'admin' })
     })
   })
 });
